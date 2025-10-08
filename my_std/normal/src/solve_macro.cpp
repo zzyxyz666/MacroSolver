@@ -68,9 +68,16 @@ void MacroSolver::AddMacro(std::string macro) {
   /// 全部输出
   for (auto& [key, value] : macro_map_) {
     //    std::cout << "name:" << key << std::endl;
+    int flag = 0;
     for (auto& each : value.first) {
       each = trim(each);
+      if (each != "") {
+        flag = 1;
+      }
       //      std::cout << "var:" << each << std::endl;
+    }
+    if (flag == 0) {
+      value.first = {};
     }
     //    std::cout << "definition:" << value.second << std::endl;
   }
@@ -163,6 +170,9 @@ std::list<std::string> MacroSolver::Expand(std::list<std::string>::iterator begi
     }
   }
   final_var.emplace_back(iter_start, std::prev(end, 1));
+  if (final_var.size() == 1 && final_var.back().first == final_var.back().second) {
+    final_var.pop_back();
+  }
   std::vector<std::pair<std::list<std::string>::iterator, std::list<std::string>::iterator>> final_var_solved;
   std::vector<std::list<std::string>> final_var_ori;
   for (auto& [begin_iter, end_iter] : final_var) {
@@ -176,10 +186,16 @@ std::list<std::string> MacroSolver::Expand(std::list<std::string>::iterator begi
     throw std::runtime_error("Too many arguments");
   }
   if ((final_var_solved.size() < def.first.size() && !(!def.first.empty() && def.first.back() == "...")) ||
-      (final_var_solved.size() < def.first.size() - 1 && (!def.first.empty() && def.first.back() == "..."))) {
+      (static_cast<int>(final_var_solved.size()) < static_cast<int>(def.first.size()) - 1 &&
+       (!def.first.empty() && def.first.back() == "..."))) {
     // 如果碰到应该检查是不是因为__VA_ARGS__少加##了导致产生了,空元素，导致IF判断个数错误导向了错误的宏匹配，导致元素个数少于宏定义的参数个数
     throw std::runtime_error("Too few arguments");
   }
+  // 其他编译器未知，但llvm的__VA_ARGS__通过##与,的相连的判定与__VA_OPT__不一致，似乎__VA_ARGS__的##对个数判定是展开前，__VA_OPT__是展开后，感觉是bug，导致如果混用的话可能需要额外进行defer
+  // #define F(...) __VA_ARGS__##,
+  // #define H(...) __VA_OPT__(,)
+  // F(VA())
+  // H(VA())
   for (auto iter = def_definition.begin(); iter != def_definition.end(); ++iter) {
     auto& each = *iter;
     if (auto the_one = std::ranges::find(def.first, each); the_one != def.first.end()) {

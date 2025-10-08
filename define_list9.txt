@@ -11,6 +11,7 @@
 /// 减法
 #define MINUS(NUM) CAT(MINUS_IMPL_, NUM)
 /// MINUS macros:
+#define MINUS_IMPL_0() 0
 #define MINUS_IMPL_1() 0
 #define MINUS_IMPL_2() 1
 #define MINUS_IMPL_3() 2
@@ -2025,10 +2026,10 @@
 #define BOOL(x) CHECK(CAT(PROBE, x)(), 1)
 /// 条件
 #define IF_ELSE(cond) CAT(IF_, BOOL(cond))
-#define IF_0(x) _IF_0_ELSE
-#define IF_1(x) x _IF_1_ELSE
-#define _IF_0_ELSE(x) x
-#define _IF_1_ELSE(y)
+#define IF_0(...) _IF_0_ELSE
+#define IF_1(...) __VA_ARGS__ _IF_1_ELSE
+#define _IF_0_ELSE(...) __VA_ARGS__
+#define _IF_1_ELSE(...)
 /// 完全展开
 #define CAL_SELF_INF_0(ME) SELF(SELF(ME))
 #define CAL_SELF_INF_1(ME) CAL_SELF_INF_0(CAL_SELF_INF_0(ME))
@@ -2090,16 +2091,16 @@
 // #define BAR() DEFER(BAR_I)() 1
 /// 通过延迟展开计算个数
 #define COUNT_ARGS(...) CAL_SELF_INF(COUNT_ARGS_IMPL0(0, ##__VA_ARGS__))
-#define COUNT_ARGS_IMPL0(N, ...) COUNT_ARGS_IMPL##__VA_OPT__(_WITH_ARGS)(N, ##__VA_ARGS__)
+#define COUNT_ARGS_IMPL0(N, ...) COUNT_ARGS_IMPL##__VA_OPT__(_WITH_ARGS)(N __VA_OPT__(,) __VA_ARGS__)
 #define COUNT_ARGS_IMPL_WITH_ARGS(N, x, ...) \
   DEFER(CAT(COUNT_ARGS_IMPL, __VA_OPT__(_WITH_ARGS1)))(ADD(N)(), ##__VA_ARGS__)
 #define COUNT_ARGS_IMPL_WITH_ARGS1(...) DEFER(COUNT_ARGS_IMPL_WITH_ARGS)(__VA_ARGS__)
 #define COUNT_ARGS_IMPL(N) N
 /// FOREACH
-#define FOREACH(FUNC, ...) CAL_SELF_INF(FOREACH_IMPL0(FUNC, , __VA_ARGS__))
+#define FOREACH(FUNC, ...) CAL_VA_INF(FOREACH_IMPL0(FUNC, , __VA_ARGS__))
 #define FOREACH_IMPL0(FUNC, ...) FOREACH_IMPL##__VA_OPT__(_WITH_ARGS)(FUNC, __VA_ARGS__)
 #define FOREACH_IMPL_WITH_ARGS(FUNC, RES, x, ...) \
-  DEFER(CAT(FOREACH_IMPL, __VA_OPT__(_WITH_ARGS1)))(FUNC, RES FUNC(x), __VA_ARGS__)
+  DEFER(CAT(FOREACH_IMPL, __VA_OPT__(_WITH_ARGS1)))(FUNC, RES FUNC(x), ##__VA_ARGS__)
 #define FOREACH_IMPL_WITH_ARGS1(...) DEFER(FOREACH_IMPL_WITH_ARGS)(__VA_ARGS__)
 #define FOREACH_IMPL(FUNC, RES) RES
 #define FOR_N(FUNC, N, ...) CAL_VA_INF1(FOR_N_IMPL_PROCESS(FUNC, N, __VA_ARGS__))
