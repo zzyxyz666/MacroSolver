@@ -172,6 +172,14 @@ std::list<std::string> MacroSolver::Expand(std::list<std::string>::iterator begi
   }
   std::list<std::string> result;
   auto def_definition = GetTokens(std::string(def.second));
+  if (final_var_solved.size() > def.first.size() && !(!def.first.empty() && def.first.back() == "...")) {
+    throw std::runtime_error("Too many arguments");
+  }
+  if ((final_var_solved.size() < def.first.size() && !(!def.first.empty() && def.first.back() == "...")) ||
+      (final_var_solved.size() < def.first.size() - 1 && (!def.first.empty() && def.first.back() == "..."))) {
+    // 如果碰到应该检查是不是因为__VA_ARGS__少加##了导致产生了,空元素，导致IF判断个数错误导向了错误的宏匹配，导致元素个数少于宏定义的参数个数
+    throw std::runtime_error("Too few arguments");
+  }
   for (auto iter = def_definition.begin(); iter != def_definition.end(); ++iter) {
     auto& each = *iter;
     if (auto the_one = std::ranges::find(def.first, each); the_one != def.first.end()) {
@@ -232,8 +240,10 @@ std::list<std::string> MacroSolver::Expand(std::list<std::string>::iterator begi
              ++push_element_iter) {
           push_element.push_back(*push_element_iter);
         }
-        for (auto& each_push_element : final_var_ori[i]) {
-          ori_push_element.push_back(each_push_element);
+        if (i < final_var_ori.size()) {
+          for (auto& each_push_element : final_var_ori[i]) {
+            ori_push_element.push_back(each_push_element);
+          }
         }
         if (i + 2 <= final_var_solved.size()) {
           push_element.push_back(",");
