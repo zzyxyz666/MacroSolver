@@ -26,12 +26,10 @@
 .history
 .ionide
 /.idea/editor.xml
-cmake-build-debug-
 /html/
 /latex/
 *.png
-/cmake-build-release/*
-cmake*
+cmake*/
 .codebuddy
 .vscode
 .idea
