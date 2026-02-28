@@ -9,6 +9,7 @@
 #include <iostream>
 #include <sstream>
 namespace lhy {
+
 inline std::string_view trim(const std::string_view str) {
   const auto start = str.find_first_not_of(" \t\n\r");
   const auto end = str.find_last_not_of(" \t\n\r");
@@ -58,6 +59,7 @@ inline std::vector<std::string_view> split(const std::string_view str, char spec
   }
   return ret;
 }
+LHY_API MacroSolver& macro_solver = MacroSolver::GetInstance();
 void MacroSolver::AddMacro(std::string macro) {
   all_macro_.emplace_back(std::move(macro));
   //  std::cout << "all_macro:" << all_macro_.back() << '\n';

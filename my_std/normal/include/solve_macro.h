@@ -9,8 +9,19 @@
 #include <map>
 #include <string>
 #include <vector>
+
+#ifdef _WIN32
+#ifdef normal_EXPORTS
+#define LHY_API __declspec(dllexport)
+#else
+#define LHY_API __declspec(dllimport)
+#endif
+#else
+#define LHY_API
+#endif
+
 namespace lhy {
-class MacroSolver {
+class LHY_API MacroSolver {
  public:
   static MacroSolver& GetInstance() {
     static MacroSolver macro_solver;
@@ -41,6 +52,7 @@ class MacroSolver {
   static bool IsStringNormal(const std::string& str);
   std::list<std::string> all_macro_{};
 };
-inline MacroSolver& macro_solver = MacroSolver::GetInstance();
+
+extern LHY_API MacroSolver& macro_solver;
 }  // namespace lhy
 #endif  // SOLVE_MACRO_H
