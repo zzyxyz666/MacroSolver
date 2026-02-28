@@ -45,16 +45,16 @@ void c();
 - 支持嵌套宏展开
 - 支持字符串化操作符 (#)
 - 支持标记连接操作符 (##)
-- 支持可变参数宏 (__VA_ARGS__)
-- 支持__VA_OPT__扩展
+- 支持可变参数宏 (\_\_VA_ARGS\_\_)
+- 支持\_\_VA_OPT\_\_扩展
 - 支持伪递归
 - Basic macro definitions and expansions
 - Macros with parameters
 - Nested macro expansions
 - Stringification operator (#)
 - Token pasting operator (##)
-- Variadic macros (__VA_ARGS__)
-- __VA_OPT__ extensions
+- Variadic macros (\_\_VA_ARGS\_\_)
+- \_\_VA_OPT\_\_ extensions
 - Supports pseudo-recursion
 
 ## 为什么不通过编译器源码来学习宏 / Why not learn macros by studying the compiler source code?
@@ -83,13 +83,15 @@ process without the need to delve into vast and complex compiler source code
 ├── Doxygen.config
 ├── LICENSE
 ├── README.md
-├── define_list1.txt - define_list9.txt  // Macro definition files for testing
-├── macro_solver_test.cpp                // Test program
+├── tests
+│   └──define_list1.txt - define_list9.txt  // Macro definition files for testing
+├── macro_solver_test.cpp                   // Test program
+├── macro_solver.cpp                        // Command program
 └── my_std
     └── normal
         ├── CMakeLists.txt
         ├── include
-        │   └── solve_macro.h            // Header file
+        │   └── solve_macro.h               // Header file
         └── src
-            └── solve_macro.cpp          // Implementation file
+            └── solve_macro.cpp             // Implementation file
 ```

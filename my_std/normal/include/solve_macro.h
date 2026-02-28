@@ -4,6 +4,7 @@
 
 #ifndef SOLVE_MACRO_H
 #define SOLVE_MACRO_H
+#include <filesystem>
 #include <list>
 #include <map>
 #include <string>
@@ -19,6 +20,7 @@ class MacroSolver {
   bool CheckUsed(std::list<std::pair<std::string, std::list<std::string>::iterator>>& used,
                  std::list<std::string>::iterator& iter, std::list<std::string>& tokens);
   [[nodiscard]] std::string SolveOneMacro(const std::string& macro);
+  void SolveMacroWithFile(std::filesystem::path& fpath);
   void ClearAllMacro();
 
  private:

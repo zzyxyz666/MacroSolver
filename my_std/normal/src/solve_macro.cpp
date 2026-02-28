@@ -4,6 +4,8 @@
 #include "solve_macro.h"
 
 #include <algorithm>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <sstream>
 namespace lhy {
@@ -58,7 +60,7 @@ inline std::vector<std::string_view> split(const std::string_view str, char spec
 }
 void MacroSolver::AddMacro(std::string macro) {
   all_macro_.emplace_back(std::move(macro));
-  //  std::cout << "all_macro:" << all_macro_.back() << std::endl;
+  //  std::cout << "all_macro:" << all_macro_.back() << '\n';
   std::string_view macro_view = all_macro_.back();
   auto splits = split(macro_view, '(', {}, 1);
   const auto name = split(splits[0], ' ', {}, 1)[1];
@@ -68,19 +70,19 @@ void MacroSolver::AddMacro(std::string macro) {
   macro_map_.insert_or_assign(name, std::pair{split(var, ','), definition});
   /// 全部输出
   for (auto& [key, value] : macro_map_) {
-    //    std::cout << "name:" << key << std::endl;
+    //    std::cout << "name:" << key << '\n';
     int flag = 0;
     for (auto& each : value.first) {
       each = trim(each);
       if (each != "") {
         flag = 1;
       }
-      //      std::cout << "var:" << each << std::endl;
+      //      std::cout << "var:" << each << '\n';
     }
     if (flag == 0) {
       value.first = {};
     }
-    //    std::cout << "definition:" << value.second << std::endl;
+    //    std::cout << "definition:" << value.second << '\n';
   }
 }
 bool MacroSolver::CheckUsed(std::list<std::pair<std::string, std::list<std::string>::iterator>>& used,
@@ -131,11 +133,11 @@ std::list<std::string>::iterator MacroSolver::SolveMacro(
       bool flag = iter == iter_ret;
       std::string add_used = *iter;
       auto expand_string = Cat(iter, iter_temp);
-      std::cout << "Expanding:" << expand_string << std::endl;
+      std::cout << "Expanding :" << expand_string << '\n';
       auto result = Expand(iter, iter_temp, tokens, used);
       auto first_iter = tokens.insert(tokens.erase(iter, iter_temp), result.begin(), result.end());
-      std::cout << "Expanding:" << expand_string << std::endl;
-      std::cout << "Result:" << Cat(tokens.begin(), tokens.end()) << std::endl;
+      std::cout << "Expanding :" << expand_string << '\n';
+      std::cout << "Result    :" << Cat(tokens.begin(), tokens.end()) << '\n';
       used.emplace_back(add_used, iter_temp);
       iter = first_iter;
       if (flag) {
@@ -151,6 +153,33 @@ std::string MacroSolver::SolveOneMacro(const std::string& macro) {
   auto tokens = GetTokens(macro);
   auto ret = SolveMacro(tokens.begin(), tokens.end(), tokens);
   return Cat(tokens.begin(), tokens.end());
+}
+void MacroSolver::SolveMacroWithFile(std::filesystem::path& fpath) {
+  std::ifstream file(fpath);
+  if (!file.is_open()) {
+    std::cout << "file open " << fpath << " failed" << '\n';
+    return;
+  }
+
+  std::string line;
+  std::string final_line;
+  while (std::getline(file, line)) {
+    if (line[0] == '#' || final_line != "") {
+      final_line += line.substr(0, line.size());
+      if (line.substr(line.size() - 1, 1) != "\\") {
+        macro_solver.AddMacro(final_line);
+        final_line = "";
+      } else {
+        final_line.pop_back();
+      }
+    } else if (line[0] == '/') {
+      continue;
+    } else {
+      std::cout << macro_solver.SolveOneMacro(line) << '\n';
+      std::cout << '\n';
+    }
+  }
+  macro_solver.ClearAllMacro();
 }
 void MacroSolver::ClearAllMacro() { macro_map_.clear(); }
 std::list<std::string> MacroSolver::Expand(std::list<std::string>::iterator begin, std::list<std::string>::iterator end,
