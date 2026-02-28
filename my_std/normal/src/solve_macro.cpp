@@ -3,6 +3,7 @@
 //
 #include "solve_macro.h"
 
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 namespace lhy {

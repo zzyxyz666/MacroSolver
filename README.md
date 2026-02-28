@@ -2,7 +2,7 @@
 
 MacroSolver 是一个 C++ 宏展开工具，专注于解析和展开 C/C++ 预处理器中的函数式宏定义。本项目是学习和深入理解 C++ 宏机制的绝佳资源。
 
-本项目是全球首个实现跨平台可视化宏扩展的工具，能够清晰地展示宏展开的每一步过程。它全面支持所有函数宏特性，尽管 Visual
+本项目是全球首个实现跨平台(仅在macos平台测试过llvm与linux平台的gcc)可视化宏扩展的工具，能够清晰地展示宏展开的每一步过程。它全面支持所有函数宏特性，尽管 Visual
 Studio 也提供了类似功能，但缺乏跨平台能力。更重要的是，我们的项目在原理上完全公开，透明度极高。
 
 MacroSolver is a C++ macro expansion tool specifically designed for parsing and expanding function-like preprocessor
@@ -93,5 +93,3 @@ process without the need to delve into vast and complex compiler source code
         └── src
             └── solve_macro.cpp          // Implementation file
 ```
-
-##                  

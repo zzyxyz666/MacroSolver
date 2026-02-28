@@ -2075,12 +2075,12 @@
 // #define FOREACH_IMPL(FUNC, N, ...)
 // #define FOREACH(FUNC, ...) FOREACH_IMPL(FUNC, , __VA_ARGS__)
 /// 这种必须通过手动多加()的方式才能实现循环
-#define FUNCTION(name) void name();
-#define FUNCTION_TABLE(seq) CAT(FUNCTION_TABLE_1 seq, _END)
-#define FUNCTION_TABLE_1(x) FUNCTION(x) FUNCTION_TABLE_2
-#define FUNCTION_TABLE_2(x) FUNCTION(x) FUNCTION_TABLE_1
-#define FUNCTION_TABLE_1_END
-#define FUNCTION_TABLE_2_END
+//#define FUNCTION(name) void name();
+//#define FUNCTION_TABLE(seq) CAT(FUNCTION_TABLE_1 seq, _END)
+//#define FUNCTION_TABLE_1(x) FUNCTION(x) FUNCTION_TABLE_2
+//#define FUNCTION_TABLE_2(x) FUNCTION(x) FUNCTION_TABLE_1
+//#define FUNCTION_TABLE_1_END
+//#define FUNCTION_TABLE_2_END
 /// 延迟展开
 #define EMPTY()
 #define DEFER(id) id EMPTY()
