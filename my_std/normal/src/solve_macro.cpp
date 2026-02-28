@@ -275,7 +275,7 @@ std::list<std::string> MacroSolver::Expand(std::list<std::string>::iterator begi
           result.back() += *std::next(iter, next_num);
           next_num++;
         }
-        tokens.erase(now_iter);
+        def_definition.erase(now_iter);
         iter = std::next(iter, next_num - 1);
       } else {
         iter = now_iter;
