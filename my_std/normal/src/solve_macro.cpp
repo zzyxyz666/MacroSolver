@@ -131,11 +131,11 @@ std::list<std::string>::iterator MacroSolver::SolveMacro(
       bool flag = iter == iter_ret;
       std::string add_used = *iter;
       auto expand_string = Cat(iter, iter_temp);
-      std::cout << "Expanding:" << expand_string << std::endl;
+      std::cout << "Expanding :" << expand_string << std::endl;
       auto result = Expand(iter, iter_temp, tokens, used);
       auto first_iter = tokens.insert(tokens.erase(iter, iter_temp), result.begin(), result.end());
-      std::cout << "Expanding:" << expand_string << std::endl;
-      std::cout << "Result:" << Cat(tokens.begin(), tokens.end()) << std::endl;
+      std::cout << "Expanding :" << expand_string << std::endl;
+      std::cout << "Result    :" << Cat(tokens.begin(), tokens.end()) << std::endl;
       used.emplace_back(add_used, iter_temp);
       iter = first_iter;
       if (flag) {

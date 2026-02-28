@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.22)
 project(macro_solver)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 23)
@@ -24,3 +24,7 @@ foreach (SRC_FILE ${ALL_SRC_FILES})
         target_link_libraries(${EXE_NAME} PUBLIC ${library})
     endforeach ()
 endforeach ()
+
+# 添加 macro_solver 可执行文件
+add_executable(macro_solver macro_solver.cpp)
+target_link_libraries(macro_solver PUBLIC ${all_library_name})

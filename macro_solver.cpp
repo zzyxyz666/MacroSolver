@@ -1,25 +1,13 @@
-//
-// Created by 连昊宇 on 25-3-12.
-//
 #include <fstream>
 #include <iostream>
-#include <filesystem>
 
 #include "solve_macro.h"
 using namespace lhy;
-int main() {
-  namespace fs = std::filesystem;
-  for (int i = 1; i <= 9; i++) {
-    fs::path fpath = fs::path(__FILE__).parent_path() / "tests" / ("define_list" + std::to_string(i) + ".txt");
-    std::ifstream file(fpath);
-    if (!file.is_open()) {
-      std::cout << "file open '" << fpath << "' failed" << std::endl;
-      return 1;
-    }
+void parse_macro(std::ifstream &file) {
     std::string line;
     std::string final_line;
     while (std::getline(file, line)) {
-      if (line[0] == '#' || !final_line.empty()) {
+      if (line[0] == '#' || final_line != "") {
         final_line += line.substr(0, line.size());
         if (line.substr(line.size() - 1, 1) != "\\") {
           macro_solver.AddMacro(final_line);
@@ -35,5 +23,20 @@ int main() {
       }
     }
     macro_solver.ClearAllMacro();
+}
+
+using namespace lhy;
+int main(int argc, const char **argv) {
+  if (argc != 2) {
+    std::cout << "need <input> file path" << std::endl;
+    return 0;
   }
+
+  std::ifstream file(argv[1]);
+  if (!file.is_open()) {
+    std::cout << "file open '" << argv[1] << "' failed" << std::endl;
+    return 1;
+  }
+  parse_macro(file);
+  return 0;
 }
